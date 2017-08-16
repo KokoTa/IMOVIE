@@ -1,0 +1,33 @@
+extends layout
+
+block content
+	include ./components/title
+	.container
+		.row
+			form.form-horizontal(method='post' action='/admin/movie/new')
+				.form-group
+					label 电影名称
+					input.form-control(type='button' name='movie[title]' value='#{movie.title}')
+				.form-group
+					label 导演
+					input.form-control(type='button' name='movie[doctor]' value='#{movie.doctor}')
+				.form-group
+					label 国家
+					input.form-control(type='button' name='movie[country]' value='#{movie.country}')
+				.form-group
+					label 语言
+					input.form-control(type='button' name='movie[language]' value='#{movie.language}')
+				.form-group
+					label 海报地址
+					input.form-control(type='button' name='movie[poster]' value='#{movie.poster}')
+				.form-group
+					label 片源地址
+					input.form-control(type='button' name='movie[flash]' value='#{movie.flash}')
+				.form-group
+					label 上映时间
+					input.form-control(type='button' name='movie[year]' value='#{movie.year}')
+				.form-group
+					label 简介
+					input.form-control(type='button' name='movie[summary]' value='#{movie.summary}')
+				.form-group
+					button.btn.btn-primary(type='submit') 录入

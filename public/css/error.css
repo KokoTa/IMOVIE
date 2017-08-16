@@ -1,0 +1,10 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: lightcoral;
+  color: white;
+  flex-direction: column; }
+
+/*# sourceMappingURL=error.css.map */

@@ -1,0 +1,17 @@
+nav.navbar.navbar-inverse(role='navagation')
+	div.container-fluid
+		//- 导航头
+		div.navbar-header
+			//- 图标
+			a.navbar-brand(href='/') IMOVIE
+			//- 导航按钮
+			button.navbar-toggle.collapsed(type='button' data-toggle='collapse' data-target='.xxx')
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+		//- 导航栏
+		div.collapse.navbar-collapse.xxx
+			ul.nav.navbar-nav.navbar-right
+				li: a(href='/') 首页
+				li: a(href='/login') 登录
+				li: a(href='/regin') 注册

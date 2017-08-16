@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	include ./components/title
+	.container
+		.row
+			each item in movies
+				.col-md-2
+					.thumbnail
+						a(hre='/movie/#{item._id}')
+							img(src='#{item.poster}' alt='#{item.title}')
+						.caption
+							h3 #{item.title}
+							p: a.btn.btn-primary(href='/movie/#{item._id}') 观看预告
+
+
