@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "moment": "^2.18.1",
-    "mongoose": "^4.11.7"
+    "mongoose": "^4.11.7",
+    "underscore": "^1.8.3"
   }
 }
