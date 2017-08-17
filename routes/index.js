@@ -145,5 +145,27 @@ router.get('/admin/userlist', function(req, res, next) {
 	});
 });
 
+// 登录
+router.post('/user/signin', function(req, res) {
+	let user = req.body;
+	let name = user.name;
+	let password = user.password;
 
+	User.findOne({name: name}, function(err, user) {
+		console.log(user)
+		if(err) return err;
+		if(!user) return res.redirect('/');
+		user.comparePassword(password, function(err, isMatch) {
+			if(err) return err;
+			if(isMatch) {
+				console.log('登录成功')
+				res.redirect('/');
+			} else {
+				console.log('登陆失败')
+				res.redirect('/');
+			}
+		})
+	})
+
+})
 module.exports = router;

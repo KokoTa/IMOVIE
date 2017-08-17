@@ -25,7 +25,7 @@ let UserSchema = mongoose.Schema({
 // 自定义方法
 // 每次存储前更新时间
 UserSchema.pre('save', function(next) {
-	let user = this; // 指向实例
+	let user = this; // this指向实例
 
 	if(this.isNew) {
 		this.meta.createAt = this.meta.updateAt = Date.now();
@@ -46,7 +46,7 @@ UserSchema.pre('save', function(next) {
 // 静态方法（Model使用的方法）
 UserSchema.statics = {
 	fetch: function(cb) {
-		return this
+		return this // this指向Model
 					.find({})
 					.sort('meta.updateAt')
 					.exec(cb);
@@ -57,5 +57,15 @@ UserSchema.statics = {
 					.exec(cb);
 	}
 };
+
+// 实例方法(实例使用的方法)
+UserSchema.methods = {
+	comparePassword: function(_password, cb) {
+		bcrypt.compare(_password, this.password, function(err, isMatch) { // this指向实例
+			if(err) return cb(err);
+			cb(null, isMatch);
+		})
+	}
+}
 
 module.exports = UserSchema;
