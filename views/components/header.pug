@@ -13,5 +13,37 @@ nav.navbar.navbar-inverse(role='navagation')
 		div.collapse.navbar-collapse.xxx
 			ul.nav.navbar-nav.navbar-right
 				li: a(href='/') 首页
-				li: a(href='/login') 登录
-				li: a(href='/regin') 注册
+				//- 模态框
+				li: a(href='/#' data-toggle='modal' data-target='#signUp') 注册
+				li: a(href='/#' data-toggle='modal' data-target='#signIn') 登录
+		//- 模态框实体
+		#signUp.modal.fade
+			.modal-dialog
+				.modal-content
+					form(method='post' action='/user/signup')
+						.modal-header 注册
+						.modal-body
+							.form-group
+								label 用户名
+								input.form-control(name='name' type='text')
+							.form-group
+								label 密码
+								input.form-control(name='password' type='text')
+						.modal-footer
+							button.btn.btn-default(type='button' data-dismiss='modal') 关闭
+							button.btn.btn-primary(type='submit') 提交
+		#signIn.modal.fade
+			.modal-dialog
+				.modal-content
+					form(method='post' action='/user/signin')
+						.modal-header 登录
+						.modal-body
+							.form-group
+								label 用户名
+								input.form-control(name='name' type='text')
+							.form-group
+								label 密码
+								input.form-control(name='password' type='text')
+						.modal-footer
+							button.btn.btn-default(type='button' data-dismiss='modal') 关闭
+							button.btn.btn-primary(type='submit') 提交

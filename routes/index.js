@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Movie = require('../model/model');
+var Movie = require('../model/movie');
 var _ = require('underscore'); // 工具函数集
+var User = require('../model/user');
 
 /* GET home page. */
 // 主页
@@ -114,5 +115,35 @@ router.delete('/admin/list', function(req, res) {
 		})
 	}
 })
+
+// 注册
+router.post('/user/signup', function(req, res) {
+	let user = req.body;
+	let _user = new User(user);
+
+	User.find({name: user.name}, function(err, user) {
+		if(err) return err;
+		if(user) {
+			res.redirect('/');
+		} else {
+			_user.save(function(err, user) {
+				if(err) return err;
+				res.redirect('/admin/userlist');
+			})
+		}
+	})
+})
+
+// 用户列表页
+router.get('/admin/userlist', function(req, res, next) {
+	User.fetch(function(err, users) {
+		if(err) return err;
+  	res.render('userlist', {
+  		title: '用户列表页',
+  		users: users
+  	});
+	});
+});
+
 
 module.exports = router;
