@@ -10,6 +10,10 @@ let UserSchema = mongoose.Schema({
 	password: {
 		type: String
 	},
+	role: { // 权限大小 0-9为普通用户，>10为管理员用户，具体懒得定义
+		type: Number,
+		default: 0
+	},
 	meta: {
 		createAt: {
 			type: Date,
