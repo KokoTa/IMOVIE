@@ -5,10 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var dbUrl = 'mongodb://localhost/IMOVIE';
 
 // connect MongoDB
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/IMOVIE', {
+mongoose.connect(dbUrl, {
   useMongoClient: true
 });
 
@@ -33,9 +36,23 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'IMOVIE',
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({
+    url: dbUrl
+  })
+}))
 
 // get moment
 app.locals.moment = require('moment');
+
+// 中间件，返回用户信息，放在路由前
+app.use(function(req, res, next) {
+  res.locals.user = req.session.user;
+  next();
+})
 
 app.use('/', index);
 

@@ -152,20 +152,27 @@ router.post('/user/signin', function(req, res) {
 	let password = user.password;
 
 	User.findOne({name: name}, function(err, user) {
-		console.log(user)
 		if(err) return err;
 		if(!user) return res.redirect('/');
 		user.comparePassword(password, function(err, isMatch) {
 			if(err) return err;
 			if(isMatch) {
-				console.log('登录成功')
+				req.session.user = user;
+				console.log('登录成功');
 				res.redirect('/');
 			} else {
-				console.log('登陆失败')
+				console.log('登陆失败');
 				res.redirect('/');
 			}
 		})
 	})
+});
 
+// 登出
+router.get('/logout', function(req, res) {
+	delete req.session.user;
+	console.log('登出成功');
+	res.redirect('/');
 })
+
 module.exports = router;
