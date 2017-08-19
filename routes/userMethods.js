@@ -8,12 +8,15 @@ module.exports = {
 
 		User.find({name: user.name}, function(err, user) {
 			if(err) return err;
-			if(user) {
+			if(user.length) { // user返回一个数组
+				console.log('注册失败');
 				res.redirect('/');
 			} else {
 				_user.save(function(err, user) {
 					if(err) return err;
-					res.redirect('/admin/userlist');
+					req.session.user = user;
+					console.log('注册成功');
+					res.redirect('/');
 				})
 			}
 		})

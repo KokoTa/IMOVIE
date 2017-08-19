@@ -1,4 +1,5 @@
 var Movie = require('../model/movie');
+var Comment = require('../model/comment');
 
 module.exports = {
 	getIndex: function(req, res, next) {
@@ -13,10 +14,17 @@ module.exports = {
 	detail: function(req, res, next) {
 		var id = req.params.id
 		Movie.findById(id, function(err, movie) {
-	  	res.render('detail', {
-	  		title: '详情页',
-	  		movie: movie
-	  	});
+			Comment.find({movie: id})
+						.populate('from', 'name') // populate意为填充：from通过ObjectId查询关联的表，随后from被替换为一个结果对象{_id:xx,name:xx}
+						.populate('reply.from reply.to', 'name')
+						.exec(function(err, comments) {
+							console.log(comments);
+					  	res.render('detail', {
+					  		title: '详情页',
+					  		movie: movie,
+					  		comments: comments
+					  	});
+						})
 		});
 	},
 	addMovie: function(req, res, next) {

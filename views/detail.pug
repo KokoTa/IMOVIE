@@ -5,7 +5,48 @@ block content
 	.container
 		.row
 			.col-md-7
+				//- 视频
 				embed(src=`${movie.flash}` width='720' height='600' type='application/x-shockwave-flash')
+				//- 评论
+				.panel
+					.panel-heading
+						h3 评论区
+					.panel-body
+						ul.media-list
+							each item in comments
+								li.media
+									.media-left
+										//- cid: 评论的Id； tid：想要回复的Id
+										a.comment-header(href='#comments' data-cid=`${item._id}` data-tid=`${item.from._id}`)
+											img.media-object(src='http://via.placeholder.com/64x64')
+									.media-body
+										h4.media-heading #{item.from.name}
+										p #{item.content}
+										if item.reply && item.reply.length > 0
+											each reply in item.reply
+												.media
+													.media-left
+														//- cid：评论的Id(同上)；tid：要回复的Id(不同)
+														a.comment-header(href='#comments' data-cid=`${item._id}` data-tid=`${reply.from._id}`)
+															img.media-object(src='http://via.placeholder.com/64x64')
+													.media-body
+														h4.media-heading #{reply.from.name}
+														p
+															span.text-info 回复#{reply.to.name}：
+															span #{reply.content}
+						if user
+							hr
+							form#comments(method='post' action='/user/comment')
+								form-group
+									textarea.form-control(row='3' name='content' style='resize:none;')
+								br
+								button.btn.btn-primary(type='submit') 提交
+								//- id：电影id；from：当前用户id
+								input(type='hidden' name='id' value=`${movie._id}`)
+								input(type='hidden' name='from' value=`${user._id}`)
+						else
+							hr
+							p.text-info 登录之后进行评论
 			.col-md-5
 				dl.dl-horizontal
 					dt 电影名
@@ -20,3 +61,4 @@ block content
 					dd= movie.year
 					dt 简介
 					dd= movie.summary
+	script(src='/js/detail.js')
