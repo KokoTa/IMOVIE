@@ -1,4 +1,3 @@
-var _ = require('underscore'); // 工具函数集
 var User = require('../model/user');
 
 module.exports = {
@@ -7,13 +6,13 @@ module.exports = {
 		let _user = new User(user);
 
 		User.find({name: user.name}, function(err, user) {
-			if(err) return err;
+			if(err) console.log(err);
 			if(user.length) { // user返回一个数组
 				console.log('注册失败');
 				res.redirect('/');
 			} else {
 				_user.save(function(err, user) {
-					if(err) return err;
+					if(err) console.log(err);
 					req.session.user = user;
 					console.log('注册成功');
 					res.redirect('/');
@@ -23,7 +22,7 @@ module.exports = {
 	},
 	getList: function(req, res, next) {
 		User.fetch(function(err, users) {
-			if(err) return err;
+			if(err) console.log(err);
 	  	res.render('userlist', {
 	  		title: '用户列表页',
 	  		users: users
@@ -36,10 +35,10 @@ module.exports = {
 		let password = user.password;
 
 		User.findOne({name: name}, function(err, user) {
-			if(err) return err;
+			if(err) console.log(err);
 			if(!user) return res.redirect('/');
 			user.comparePassword(password, function(err, isMatch) {
-				if(err) return err;
+				if(err) console.log(err);
 				if(isMatch) {
 					req.session.user = user;
 					console.log('登录成功');

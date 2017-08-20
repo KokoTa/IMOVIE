@@ -1,15 +1,24 @@
 var Movie = require('../model/movie');
 var Comment = require('../model/comment');
+var Category = require('../model/category');
+var _ = require('underscore'); // 工具函数集
 
 module.exports = {
 	getIndex: function(req, res, next) {
-		Movie.fetch(function(err, movies) {
-			if(err) return err;
-	  	res.render('index', {
-	  		title: '首页',
-	  		movies: movies
-	  	});
-		});
+		Category.find({})
+			.populate({
+				path: 'movies',
+				options: {
+					limit: 5
+				}
+			})
+			.exec(function(err, categories) {
+				if(err) console.log(err);
+				res.render('index', {
+					title: '首页',
+					categories: categories
+				})
+			});
 	},
 	detail: function(req, res, next) {
 		var id = req.params.id
@@ -18,7 +27,6 @@ module.exports = {
 						.populate('from', 'name') // populate意为填充：from通过ObjectId查询关联的表，随后from被替换为一个结果对象{_id:xx,name:xx}
 						.populate('reply.from reply.to', 'name')
 						.exec(function(err, comments) {
-							console.log(comments);
 					  	res.render('detail', {
 					  		title: '详情页',
 					  		movie: movie,
@@ -28,50 +36,43 @@ module.exports = {
 		});
 	},
 	addMovie: function(req, res, next) {
-	  res.render('admin', {
-	  	title: '录入页',
-	  	movie: {
-	  		title: '',
-	  		doctor: '',
-	  		country: '',
-	  		flash: '',
-	  		poster: '',
-	  		year: '',
-	  		summary: '',
-	  		language: '',
-	  	}
-	  });
+		Category.find({}, function(err, categories) {
+			if(err) console.log(err);
+		  res.render('admin', {
+		  	title: '录入页',
+		  	movie: {},
+		  	categories: categories
+		  });
+		})
 	},
 	submit: function(req, res, next) {
 		var id = req.body._id;
 		var movieObj = req.body;
 		var _movie;
 
-		if(id !== 'undefined') {
+		if(id) { // 更新电影
 			Movie.findById(id, function(err, movie) {
-				if(err) return err;
+				if(err) console.log(err);
 				_movie = _.extend(movie, movieObj); // 合并对象
 				_movie.save(function(err, movie) { // 覆盖记录
-					if(err) return err;
+					if(err) console.log(err);
 					res.redirect('/movie/' + movie._id)
 				});
 			});
 			// 替代方案
 			// Model.findOneAndUpdate([conditions], [update], [callback])
-		} else {
-			_movie = new Movie({
-				title: movieObj.title,
-				doctor: movieObj.doctor,
-				country: movieObj.country,
-				flash: movieObj.flash,
-				poster: movieObj.poster,
-				year: movieObj.year,
-				summary: movieObj.summary,
-				language: movieObj.language
-			});
+		} else { // 添加新电影
+			_movie = new Movie(movieObj);
 			_movie.save(function(err, movie) {
-				if(err) return err;
-				res.redirect('/movie/' + movie._id)
+				if(err) console.log(err);
+				Category.findById(movie.category, function(err, category) { // 分类储存在电影里后，电影也储存在分类里，双向绑定
+					category.movies.push(movie._id);
+					category.save(function(err, category) {
+						if(err) console.log(err);
+						res.redirect('/movie/' + movie._id)
+					});
+				});
+
 			});
 		}
 	},
@@ -79,15 +80,18 @@ module.exports = {
 		var id = req.params.id;
 		if(id) {
 			Movie.findById(id, function(err, movie) {
-				res.render('admin', {
-					movie: movie
+				Category.find({}, function(err, categories) {
+					res.render('admin', {
+						movie: movie,
+						categories: categories
+					})
 				})
 			})
 		}
 	},
 	getList: function(req, res, next) {
 		Movie.fetch(function(err, movies) {
-			if(err) return err;
+			if(err) console.log(err);
 	  	res.render('list', {
 	  		title: '列表页',
 	  		movies: movies
@@ -99,7 +103,7 @@ module.exports = {
 		if(id) {
 			Movie.remove({_id:id}, function(err, movie) {
 				if(err) {
-					return err;
+					console.log(err);
 				} else {
 					res.json({success: 1})
 				}

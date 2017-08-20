@@ -2,19 +2,9 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
-let MovieSchema = mongoose.Schema({
-	title: String,
-	doctor: String,
-	country: String,
-	flash: String,
-	poster: String,
-	year: Number,
-	summary: String,
-	language: String,
-	category: {
-		type: ObjectId,
-		ref: 'category'
-	},
+let CategorySchema = mongoose.Schema({
+	name: String,
+	movies: [{type: ObjectId, ref: 'movie'}],
 	meta: {
 		createAt: {
 			type: Date,
@@ -29,7 +19,7 @@ let MovieSchema = mongoose.Schema({
 
 // 自定义方法
 // 每次存储前更新时间
-MovieSchema.pre('save', function(next) {
+CategorySchema.pre('save', function(next) {
 	if(this.isNew) {
 		this.meta.createAt = this.meta.updateAt = Date.now();
 	} else {
@@ -40,7 +30,7 @@ MovieSchema.pre('save', function(next) {
 });
 
 // 静态方法（Model使用的方法）
-MovieSchema.statics = {
+CategorySchema.statics = {
 	fetch: function(cb) {
 		return this
 					.find({})
@@ -54,4 +44,4 @@ MovieSchema.statics = {
 	}
 };
 
-module.exports = MovieSchema;
+module.exports = CategorySchema;

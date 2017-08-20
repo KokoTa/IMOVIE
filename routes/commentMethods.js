@@ -16,7 +16,7 @@ module.exports ={
 				comment.reply.push(reply);
 
 				comment.save(function(err, comment) {
-					if(err) return err;
+					if(err) console.log(err);
 					res.redirect('/movie/' + movieId);
 				});
 			});
@@ -29,9 +29,23 @@ module.exports ={
 
 			comment.save(function(err, comment) {
 				console.log('评论成功');
-				if(err) return err;
+				if(err) console.log(err);
 				res.redirect('/movie/' + movieId)
 			})
 		}
 	}
 }
+
+
+// 评论数据模型：
+// comment: {
+// 	movie: Object(111), -> 关联电影
+// 	from: Object(222), -> 关联用户
+// 	reply: [{
+// 		from: Object(333), ->关联用户
+// 		to: Object(444), ->关联用户
+// 		content: String ->内容
+// 	}],
+// 	content: String ->内容
+// 	meta: {...}
+// }

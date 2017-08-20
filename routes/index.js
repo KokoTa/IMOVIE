@@ -6,6 +6,7 @@ var userMethods = require('./userMethods');
 var adminLive = require('./adminLive'); // 用户检测
 var adminPower = require('./adminPower'); // 权限控制
 var commentMethods = require('./commentMethods');
+var categoryMethods = require('./categoryMethods');
 
 /* GET home page. */
 // 主页
@@ -34,5 +35,12 @@ router.get('/logout', userMethods.logout);
 
 // 发表评论
 router.post('/user/comment', adminLive.check, commentMethods.submit);
+
+// 电影分类
+router.get('/admin/movie/newCategory', adminLive.check, adminPower.check, categoryMethods.new);
+// 分类提交
+router.post('/admin/movie/newCategory', adminLive.check, adminPower.check, categoryMethods.submit);
+// 分类列表
+router.get('/admin/movie/categoryList', adminLive.check, adminPower.check, categoryMethods.getList);
 
 module.exports = router;

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	include ./components/title
+	.container
+		.row
+			form.form-horizontal(method='post' action='/admin/movie/newCategory')
+				.form-group
+					label 添加分类
+					input.form-control(type='text' name='categoryName')
+				.form-group
+					button.btn.btn-primary(type='submit') 录入

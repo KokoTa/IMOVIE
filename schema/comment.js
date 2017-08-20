@@ -7,11 +7,11 @@ let CommentSchema = mongoose.Schema({
 		type: ObjectId,
 		ref: 'movie' // ref对应要关联的Model，而不是Schema
 	},
-	from: { // 评论内容的发表者
+	from: { // 评论的发表者
 		type: ObjectId,
 		ref: 'user'
 	},
-	reply: [{ // 评论内容的回复
+	reply: [{ // 评论的回复
 		from: {type: ObjectId, ref: 'user'},
 		to: {type: ObjectId, ref: 'user'},
 		content: String
