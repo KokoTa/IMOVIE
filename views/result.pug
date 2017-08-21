@@ -1,0 +1,31 @@
+extends layout
+
+block content
+	include ./components/title
+	.container
+		.row
+			.panel.panel-default
+				.panel-heading
+					h3 #{movies.name}
+				.panel-body
+					each item in movies
+						.col-md-2
+							.thumbnail
+								a(href=`/movie/${item._id}`)
+									img(src=`${item.poster}` alt=`${item.title}`)
+								.caption
+									p: strong #{item.title}
+									p: a.btn.btn-primary(href=`/movie/${item._id}`) 观看预告
+		if cat
+			.row
+				ul.pagination
+					- for (var i=0; i<totalPage; i++)
+							if (currentPage == i + 1)
+								li.active
+									span #{currentPage}
+							else
+								li
+									a(href=`/result?cat=${cat}&index=${i}`) #{i+1}
+
+
+

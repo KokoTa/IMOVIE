@@ -5,6 +5,9 @@ block content
 	.container
 		.row
 			form.form-horizontal(method='post' action='/admin/movie/new')
+				.form-group
+					label 填充豆瓣电影信息(输入电影ID,失焦后填充)
+					input.form-control#douban(type='text')
 				if movie._id
 					input(type='hidden' name='_id' value=`${movie._id}`)
 				.form-group
@@ -12,33 +15,34 @@ block content
 						p
 						if categories && categories.length > 0
 							each cat in categories
-								- var check = (cat._id.toString() == movie.category.toString())
+								- var check = (String(cat._id) == String(movie.category))
 								label.radio-inline
-									input(type='radio' name='category' checked=check value=cat._id)
+									input(type='radio' name='category' checked=check value=cat._id required='true')
 									span #{cat.name}
 				.form-group
 					label 电影名称
-					input.form-control(type='text' name='title' value=movie.title)
+					input.form-control#movieName(type='text' name='title' value=movie.title)
 				.form-group
 					label 导演
-					input.form-control(type='text' name='doctor' value=movie.doctor)
+					input.form-control#movieDoctor(type='text' name='doctor' value=movie.doctor)
 				.form-group
 					label 国家
-					input.form-control(type='text' name='country' value=movie.country)
+					input.form-control#movieCountry(type='text' name='country' value=movie.country)
 				.form-group
 					label 语言
-					input.form-control(type='text' name='language' value=movie.language)
+					input.form-control#movieLanguage(type='text' name='language' value=movie.language)
 				.form-group
 					label 海报地址
-					input.form-control(type='text' name='poster' value=movie.poster)
+					input.form-control#moviePoster(type='text' name='poster' value=movie.poster)
 				.form-group
 					label 片源地址
-					input.form-control(type='text' name='flash' value=movie.flash)
+					input.form-control#movieFlash(type='text' name='flash' value=movie.flash)
 				.form-group
 					label 上映时间
-					input.form-control(type='text' name='year' value=movie.year)
+					input.form-control#movieYear(type='text' name='year' value=movie.year)
 				.form-group
 					label 简介
-					input.form-control(type='text' name='summary' value=movie.summary)
+					input.form-control#movieSummary(type='text' name='summary' value=movie.summary)
 				.form-group
 					button.btn.btn-primary(type='submit') 录入
+	script(src='/js/douban_data.js')

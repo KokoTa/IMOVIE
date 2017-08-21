@@ -19,6 +19,12 @@ nav.navbar.navbar-inverse(role='navagation')
 				else 
 					li: a(href='/#' data-toggle='modal' data-target='#signUp') 注册
 					li: a(href='/#' data-toggle='modal' data-target='#signIn') 登录
+			//- 搜索
+			form.navbar-form.navbar-right(method='get' action='/result')
+				.form-group
+					input.form-control(type='text' placeholder='Search' name='movieName')
+					span &nbsp;
+					button.btn.btn-default(type='submit') 搜索
 		//- 模态框实体
 		#signUp.modal.fade
 			.modal-dialog

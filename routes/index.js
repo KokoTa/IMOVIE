@@ -36,11 +36,13 @@ router.get('/logout', userMethods.logout);
 // 发表评论
 router.post('/user/comment', adminLive.check, commentMethods.submit);
 
-// 电影分类
+// 电影分类添加页
 router.get('/admin/movie/newCategory', adminLive.check, adminPower.check, categoryMethods.new);
 // 分类提交
 router.post('/admin/movie/newCategory', adminLive.check, adminPower.check, categoryMethods.submit);
-// 分类列表
+// 分类列表(分类类型)
 router.get('/admin/movie/categoryList', adminLive.check, adminPower.check, categoryMethods.getList);
+// 分类列表(某类型所有电影)
+router.get('/result', categoryMethods.result);
 
 module.exports = router;
