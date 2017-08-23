@@ -3,6 +3,9 @@ var Comment = require('../model/comment');
 var Category = require('../model/category');
 var _ = require('underscore'); // 工具函数集
 
+var fs = require('fs');
+var path = require('path'); 
+
 module.exports = {
 	getIndex: function(req, res, next) {
 		Category.find({})
@@ -22,6 +25,12 @@ module.exports = {
 	},
 	detail: function(req, res, next) {
 		var id = req.params.id
+
+		Movie.update({_id: id}, {$inc: {pv: 1}}, function(err, info) {
+			if(err) console.log(err);
+			console.log(info);
+		});
+
 		Movie.findById(id, function(err, movie) {
 			Comment.find({movie: id})
 						.populate('from', 'name') // populate意为填充：from通过ObjectId查询关联的表，随后from被替换为一个结果对象{_id:xx,name:xx}
@@ -49,6 +58,8 @@ module.exports = {
 		var id = req.body._id;
 		var movieObj = req.body;
 		var _movie;
+
+		if(req.poster) movieObj.poster = req.poster;
 
 		if(id) { // 更新电影
 			Movie.findById(id, function(err, movie) {
@@ -108,6 +119,27 @@ module.exports = {
 					res.json({success: 1})
 				}
 			})
+		}
+	},
+	savePoster: function(req, res, next) {
+		var posterData = req.files.uploadPoster;
+		var filePath = posterData.path;
+		var fileName = posterData.originalFilename;
+
+		if(fileName) { // 如果上传了文件就执行
+			fs.readFile(filePath, function(err, data) {
+				var timeStamp = Date.now();
+				var type = posterData.type.split('/')[1];
+				var poster = timeStamp + '.' + type;
+				var newPath = path.join(__dirname, '../public/upload/' + poster);
+
+				fs.writeFile(newPath, data, function(err) {
+					req.poster = '/upload/' + poster;
+					next();
+				})
+			})
+		} else {
+			next();
 		}
 	}
 }

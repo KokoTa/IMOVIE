@@ -4,7 +4,7 @@ block content
 	include ./components/title
 	.container
 		.row
-			form.form-horizontal(method='post' action='/admin/movie/new')
+			form.form-horizontal(method='post' action='/admin/movie/new'  enctype='multipart/form-data')
 				.form-group
 					label 填充豆瓣电影信息(输入电影ID,失焦后填充)
 					input.form-control#douban(type='text')
@@ -34,6 +34,9 @@ block content
 				.form-group
 					label 海报地址
 					input.form-control#moviePoster(type='text' name='poster' value=movie.poster)
+				.form-group
+					label 海报上传
+					input#uploadPoster(type='file' name='uploadPoster')
 				.form-group
 					label 片源地址
 					input.form-control#movieFlash(type='text' name='flash' value=movie.flash)

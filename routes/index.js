@@ -8,6 +8,10 @@ var adminPower = require('./adminPower'); // 权限控制
 var commentMethods = require('./commentMethods');
 var categoryMethods = require('./categoryMethods');
 
+// file middleware
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
+
 /* GET home page. */
 // 主页
 router.get('/', movieMethods.getIndex);
@@ -16,7 +20,7 @@ router.get('/movie/:id', movieMethods.detail);
 // 录入页
 router.get('/admin/movie', adminLive.check, adminPower.check, movieMethods.addMovie);
 // 提交
-router.post('/admin/movie/new', adminLive.check, adminPower.check, movieMethods.submit);
+router.post('/admin/movie/new', adminLive.check, adminPower.check, multipartMiddleware, movieMethods.savePoster, movieMethods.submit);
 // 更新
 router.get('/admin/update/:id', adminLive.check, adminPower.check, movieMethods.update);
 // 列表页

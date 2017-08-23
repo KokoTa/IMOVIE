@@ -11,6 +11,10 @@ let MovieSchema = mongoose.Schema({
 	year: Number,
 	summary: String,
 	language: String,
+	pv: {
+		type: Number,
+		default: 0
+	},
 	category: {
 		type: ObjectId,
 		ref: 'category'
